@@ -3,76 +3,48 @@ package main;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
 
 public class Graph {
-	// Kante
-	static class Edge {
-		Node dest; // Zielknoten
-		int cost; // Kantengewicht
+	public static class Edge {
+		Node src;
+		Node dest;
+		int weight;
 
-		public Edge(Node n, int c) {
-			dest = n;
-			cost = c;
-		}
-
-		public Node getDestNode() {
-			return dest;
-		}
-
-		public int getCost() {
-			return cost;
+		public Edge(Node src_node, Node dest_node, int c) {
+			src = src_node;
+			dest = dest_node;
+			weight = c;
 		}
 	}
 
-	// Knoten
-	static class Node {
-		String label; // Knotenbezeichner
+	public static class Node {
+		String label;
 		int visits = 0;
-		// Adjazenzliste
-		ArrayList<Edge> adjList = new ArrayList<Edge>();
+		ArrayList<Edge> edgeList = new ArrayList<Edge>();
 
 		public Node(String s) {
 			label = s;
 		}
 
-		public String getLabel() {
-			return label;
-		}
-
 		public void addEdge(Edge e) {
-			adjList.add(e);
-		}
-
-		public Iterator<Edge> getEdges() {
-			return adjList.iterator();
-		}
-
-		public Edge getEdgeTo(Node n) {
-			for (Edge e : adjList) {
-				if (e.dest.equals(n))
-					return e;
-			}
-			return null;
-		}
-		
-		public int getVisits() {
-			return visits;
+			edgeList.add(e);
 		}
 		
 	}
 
-	// Verzeichnis alles Knoten des Graphen
 	private HashMap<String,Node> nodeSet =
 			new HashMap<String, Node>();
 	
 	public Graph() {}
 	
-	public Node addNode(String label) {
-//		throws NodeAlreadyDefinedException {
-//		if (nodeSet.containsKey(label))
-//			throw new NodeAlreadyDefinedException();
+	public Node addNode(String label) throws IllegalArgumentException {
+		if (nodeSet.containsKey(label))
+			throw new IllegalArgumentException("The Node already exists in this graph");;
 		Node n = new Node(label);
 		nodeSet.put(label,n);
 		return n;
@@ -86,10 +58,11 @@ public class Graph {
 		return n;
 	}
 	
-	public void addEdge(String src, String dest, int cost) {
-		Node srcNode = getNode(src);
-		Node destNode = getNode(dest);
-		srcNode.addEdge(new Edge(destNode, cost));
+	public void addEdge(String label1, String label2, int cost) {
+		Node node1 = getNode(label1);
+		Node node2 = getNode(label2);
+		node1.addEdge(new Edge(node1, node2, cost));
+		node2.addEdge(new Edge(node2, node1, cost));
 	}
 	
 	public int size() {
@@ -98,28 +71,81 @@ public class Graph {
 
 	
 	public void dfs() {
+		//Set all nodes to "not visited"
 		for(Entry<String, Node> entry : nodeSet.entrySet()) {
 			entry.getValue().visits = 0;
 		}
 		
 		for(Entry<String, Node> entry : nodeSet.entrySet()) {
 			if(entry.getValue().visits == 0)
-				visit(entry.getKey());
+				dfs_visit(entry.getKey());
 		}
-		
 	}
 	
-	void visit(String label) {
+	void dfs_visit(String label) {
 		Node n = nodeSet.get(label);
-		System.out.println(label + ": " + n.visits);
 		n.visits++;
-		for(Edge e : n.adjList) {
+		for(Edge e : n.edgeList) {
 			Node d = e.dest;
 			if (d.visits == 0)
-				visit(d.label);
+				dfs_visit(d.label);
 		}
 		n.visits++;
 	}
 	
-	
+	public Graph mst() {
+
+		//Set all nodes to "not visited"
+		for(Entry<String, Node> entry : nodeSet.entrySet()) {
+			entry.getValue().visits = 0;
+		}
+		
+		Graph g = new Graph(); // output graph
+		
+		Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[0]).getValue();
+		
+		g.addNode(n.label);
+		n.visits++;
+		
+		// edges available from current mst
+		TreeMap<Integer, Edge> edges = new TreeMap<Integer, Edge>();
+		
+		//add outgoing edged from current node to available edges
+		for(Edge e : n.edgeList) {
+			edges.put(e.weight, e);
+		}
+		
+		while(true) {
+			Node m = null;
+			Edge f = null;
+			List<Entry<Integer,Edge>> obsolete = new ArrayList<Entry<Integer,Edge>>();
+			for(Entry<Integer, Edge> entry : edges.entrySet()) {
+				Edge e = entry.getValue();
+				if(e.dest.visits == 0) {
+					m = e.dest;
+					f = e;
+					break;
+				}
+				else {
+					obsolete.add(entry);
+				}
+			}
+			
+			if(m == null) break;
+			
+			for(Entry<Integer,Edge> e : obsolete)
+				edges.remove(e.getKey(), e.getValue());
+
+			//add outgoing edged from current node to available edges
+			for(Edge e : m.edgeList) {
+				edges.put(e.weight, e);
+			}
+			
+			g.addNode(m.label);
+			g.addEdge(f.src.label, f.dest.label, f.weight);
+			m.visits++;
+			
+		}
+		return g;
+	}
 }
