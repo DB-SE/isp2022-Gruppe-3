@@ -2,9 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
@@ -107,7 +105,7 @@ public class Graph {
 		g.addNode(n.label);
 		n.visits++;
 		
-		// edges available from current mst
+		// edges available from current mst, sorted by weight
 		TreeMap<Integer, Edge> edges = new TreeMap<Integer, Edge>();
 		
 		//add outgoing edged from current node to available edges
@@ -118,7 +116,10 @@ public class Graph {
 		while(true) {
 			Node m = null;
 			Edge f = null;
+			
 			List<Entry<Integer,Edge>> obsolete = new ArrayList<Entry<Integer,Edge>>();
+			
+			//pick edge with lowest weight
 			for(Entry<Integer, Edge> entry : edges.entrySet()) {
 				Edge e = entry.getValue();
 				if(e.dest.visits == 0) {
@@ -131,8 +132,9 @@ public class Graph {
 				}
 			}
 			
-			if(m == null) break;
+			if(m == null) break; //no available, unvisited nodes left
 			
+			//remove edges pointing to visited nodes
 			for(Entry<Integer,Edge> e : obsolete)
 				edges.remove(e.getKey(), e.getValue());
 
@@ -141,6 +143,7 @@ public class Graph {
 				edges.put(e.weight, e);
 			}
 			
+			//add node and edge to output graph
 			g.addNode(m.label);
 			g.addEdge(f.src.label, f.dest.label, f.weight);
 			m.visits++;
