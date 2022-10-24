@@ -1,6 +1,9 @@
+package main;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
 public class Graph {
@@ -26,6 +29,7 @@ public class Graph {
 	// Knoten
 	static class Node {
 		String label; // Knotenbezeichner
+		int visits = 0;
 		// Adjazenzliste
 		ArrayList<Edge> adjList = new ArrayList<Edge>();
 
@@ -52,6 +56,11 @@ public class Graph {
 			}
 			return null;
 		}
+		
+		public int getVisits() {
+			return visits;
+		}
+		
 	}
 
 	// Verzeichnis alles Knoten des Graphen
@@ -60,10 +69,10 @@ public class Graph {
 	
 	public Graph() {}
 	
-	public Node addNode(String label)
-		throws NodeAlreadyDefinedException {
-		if (nodeSet.containsKey(label))
-			throw new NodeAlreadyDefinedException();
+	public Node addNode(String label) {
+//		throws NodeAlreadyDefinedException {
+//		if (nodeSet.containsKey(label))
+//			throw new NodeAlreadyDefinedException();
 		Node n = new Node(label);
 		nodeSet.put(label,n);
 		return n;
@@ -82,5 +91,35 @@ public class Graph {
 		Node destNode = getNode(dest);
 		srcNode.addEdge(new Edge(destNode, cost));
 	}
+	
+	public int size() {
+		return nodeSet.size();
+	}
 
+	
+	public void dfs() {
+		for(Entry<String, Node> entry : nodeSet.entrySet()) {
+			entry.getValue().visits = 0;
+		}
+		
+		for(Entry<String, Node> entry : nodeSet.entrySet()) {
+			if(entry.getValue().visits == 0)
+				visit(entry.getKey());
+		}
+		
+	}
+	
+	void visit(String label) {
+		Node n = nodeSet.get(label);
+		System.out.println(label + ": " + n.visits);
+		n.visits++;
+		for(Edge e : n.adjList) {
+			Node d = e.dest;
+			if (d.visits == 0)
+				visit(d.label);
+		}
+		n.visits++;
+	}
+	
+	
 }
