@@ -8,15 +8,24 @@ import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 public class Graph {
+	
+	public static byte WEIGHTED = 0b001;
+	public static byte DIRECTED = 0b010;
+	public static byte LABELED =  0b100;
+	
 	public static class Edge {
-		Node src;
-		Node dest;
+		Node src, dest;
 		int weight;
 
-		public Edge(Node src_node, Node dest_node, int c) {
+		public Edge(Node src_node, Node dest_node, int w) {
 			src = src_node;
 			dest = dest_node;
-			weight = c;
+			weight = w;
+		}
+		
+		public Edge(Node src_node, Node dest_node) {
+			src = src_node;
+			dest = dest_node;
 		}
 	}
 
@@ -37,30 +46,75 @@ public class Graph {
 
 	private HashMap<String,Node> nodeSet =
 			new HashMap<String, Node>();
+	private boolean weighted = false;
+	private boolean directed = false;
+	private boolean labeled = false;
+	private int ind = 0;
 	
+	public Graph(int configFlags) {
+		weighted = (configFlags & WEIGHTED) == WEIGHTED;
+		directed = (configFlags & DIRECTED) == DIRECTED;
+		labeled = (configFlags & LABELED) == LABELED;
+	}
 	public Graph() {}
+	
+	public int getConfigFlags() {
+		int out = 0;
+		if(weighted) out |= WEIGHTED;
+		if(directed) out |= DIRECTED;
+		if(labeled) out |= LABELED;
+		return out;
+	}
 	
 	public Node addNode(String label) throws IllegalArgumentException {
 		if (nodeSet.containsKey(label))
 			throw new IllegalArgumentException("The Node already exists in this graph");;
 		Node n = new Node(label);
 		nodeSet.put(label,n);
+		ind++;
 		return n;
+	}
+	public Node addNode(Node node) throws IllegalArgumentException {
+		if (nodeSet.containsValue(node))throw new IllegalArgumentException("The Node already exists in this graph");
+		nodeSet.put(ind + "",node);
+		node.label = ind + "";
+		ind++;
+		return node;
 	}
 	
 	public Node getNode(String label)
 		throws NoSuchElementException {
+		if(!labeled) throw new IllegalArgumentException("Trying to find a Node by label in an unlabeled graph.");
 		Node n = nodeSet.get(label);
 		if (n == null)
 			throw new NoSuchElementException();
 		return n;
 	}
 	
-	public void addEdge(String label1, String label2, int cost) {
+	public void addEdge(String label1, String label2, int weight) {
+		if(!labeled) throw new IllegalArgumentException("Trying to apply label in an unlabeled graph.");
+		if(!weighted) weight = 1;
 		Node node1 = getNode(label1);
 		Node node2 = getNode(label2);
-		node1.addEdge(new Edge(node1, node2, cost));
-		node2.addEdge(new Edge(node2, node1, cost));
+		addEdge(node1, node2, weight);
+	}
+	
+	public void addEdge(String label1, String label2) {
+		if(!labeled) throw new IllegalArgumentException("Trying to apply label in an unlabeled graph.");
+		Node node1 = getNode(label1);
+		Node node2 = getNode(label2);
+		addEdge(node1, node2);
+	}
+
+	public void addEdge(Node node1, Node node2, int weight) {
+		if(!weighted) weight = 1;
+		node1.addEdge(new Edge(node1, node2, weight));
+		if(!directed)node2.addEdge(new Edge(node2, node1, weight));
+	}
+	
+	public void addEdge(Node node1, Node node2) {
+		node1.addEdge(new Edge(node1, node2));
+		if(!directed)node2.addEdge(new Edge(node2, node1));
 	}
 	
 	public int size() {
@@ -92,13 +146,14 @@ public class Graph {
 	}
 	
 	public Graph mst() {
-
+		if(directed) throw new IllegalArgumentException("MST not applicable to directed graph.");
+		
 		//Set all nodes to "not visited"
 		for(Entry<String, Node> entry : nodeSet.entrySet()) {
 			entry.getValue().visits = 0;
 		}
 		
-		Graph g = new Graph(); // output graph
+		Graph g = new Graph(getConfigFlags()); // output graph
 		
 		Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[0]).getValue();
 		

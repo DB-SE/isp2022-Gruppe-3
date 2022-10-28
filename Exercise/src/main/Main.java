@@ -8,7 +8,7 @@ public class Main {
 	public static void main(String[] args) {		
 		
 		// Testing
-		Graph g = new Graph();
+		Graph g = new Graph(Graph.WEIGHTED | Graph.LABELED);
 		g.addNode("N1");
 		g.addNode("N2");
 		g.addNode("N3");
