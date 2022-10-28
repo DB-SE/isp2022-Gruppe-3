@@ -1,0 +1,6 @@
+Zur Laufzeitvariabilität nutzen wir Methoden-Parameter.
+Bei der Erstellung eines Graphen werden Flags übergeben, durch die sich jeder Graph konfigurieren lässt.
+Wir benutzen kein Design Pattern wie Factory oder Decorator, das wir denken, dass die geringe Komplexität der
+Variabilität diese nicht rechtfertigt.
+Unsere Lösung erfordert keine weiteren Klassen und Vererbung, jedoch ist Code, der die Variabilität ermöglicht,
+über verschiedenste Methoden verteilt.

@@ -15,7 +15,7 @@ public class Graph {
 	
 	public static class Edge {
 		Node src, dest;
-		int weight;
+		int weight = 1;
 
 		public Edge(Node src_node, Node dest_node, int w) {
 			src = src_node;
@@ -56,6 +56,7 @@ public class Graph {
 		directed = (configFlags & DIRECTED) == DIRECTED;
 		labeled = (configFlags & LABELED) == LABELED;
 	}
+	
 	public Graph() {}
 	
 	public int getConfigFlags() {
@@ -93,7 +94,6 @@ public class Graph {
 	
 	public void addEdge(String label1, String label2, int weight) {
 		if(!labeled) throw new IllegalArgumentException("Trying to apply label in an unlabeled graph.");
-		if(!weighted) weight = 1;
 		Node node1 = getNode(label1);
 		Node node2 = getNode(label2);
 		addEdge(node1, node2, weight);
@@ -147,6 +147,7 @@ public class Graph {
 	
 	public Graph mst() {
 		if(directed) throw new IllegalArgumentException("MST not applicable to directed graph.");
+		if(!weighted) throw new IllegalArgumentException("MST not applicable to unweighted graph.");
 		
 		//Set all nodes to "not visited"
 		for(Entry<String, Node> entry : nodeSet.entrySet()) {
