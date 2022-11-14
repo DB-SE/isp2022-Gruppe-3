@@ -30,6 +30,17 @@ public class Main {
 		g.addEdge("N5", "N7", 1);
 		System.out.println("Nodes : " + g.size());
 		g.dfs();
+		
+		boolean[][] matr = g.getAdjMatrix();
+		String pr = "";
+		for(int i = 0; i < matr.length; i++) {
+			for(int j = 0; j < matr.length; j++) {
+				pr += (matr[i][j] ? 1 : 0) + " ";
+			}
+			pr += "\n";
+		}
+		System.out.println(pr);
+		
 		Graph mst = g.mst();
 
 		System.out.println("Nodes : " + mst.size());

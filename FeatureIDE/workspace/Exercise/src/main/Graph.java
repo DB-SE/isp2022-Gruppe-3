@@ -207,4 +207,22 @@ public class Graph {
 		}
 		return g;
 	}
+	
+	public boolean[][] getAdjMatrix(){
+		boolean[][] out = new boolean[size()][size()];
+		HashMap<String, Integer> labels = new HashMap<String, Integer>();
+		
+		for(int i = 0; i < size(); i++) {
+			labels.put(((Entry<String, Node>)nodeSet.entrySet().toArray()[i]).getKey(), i);
+		}
+		
+		for(int i = 0; i < size(); i++) {
+			Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[i]).getValue();
+			for(Edge e : n.edgeList) {
+				out[i][labels.get(e.dest.label)] = true;
+			}
+		}
+		
+		return out;
+	}
 }

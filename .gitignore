@@ -1,3 +1,5 @@
 /.metadata/
+FeatureIDE/workspace/.metadata/
 Exercise/.classpath
 Exercise/.settings/org.eclipse.jdt.core.prefs
+*.class
