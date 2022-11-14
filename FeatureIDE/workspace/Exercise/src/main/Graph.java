@@ -51,13 +51,24 @@ public class Graph {
 	private boolean labeled = false;
 	private int ind = 0;
 	
-	public Graph(int configFlags) {
+	private Graph(int configFlags) {
 		weighted = (configFlags & WEIGHTED) == WEIGHTED;
 		directed = (configFlags & DIRECTED) == DIRECTED;
 		labeled = (configFlags & LABELED) == LABELED;
 	}
 	
-	public Graph() {}
+	public Graph() {
+		int flags = 0;
+		//#if Weighted
+//@		flags |= WEIGHTED;
+		//#endif
+		//#if Directed
+//@		flags |= DIRECTED;
+		//#endif
+		//#if Labeled
+//@		flags |= LABELED;
+		//#endif
+	}
 	
 	public int getConfigFlags() {
 		int out = 0;
@@ -123,15 +134,20 @@ public class Graph {
 
 	
 	public void dfs() {
-		//Set all nodes to "not visited"
-		for(Entry<String, Node> entry : nodeSet.entrySet()) {
-			entry.getValue().visits = 0;
-		}
-		
-		for(Entry<String, Node> entry : nodeSet.entrySet()) {
-			if(entry.getValue().visits == 0)
-				dfs_visit(entry.getKey());
-		}
+		//#if !DFS 
+				throw new IllegalArgumentException("DFS feature is not enabled");
+		//#else
+//@		
+//@		//Set all nodes to "not visited"
+//@		for(Entry<String, Node> entry : nodeSet.entrySet()) {
+//@			entry.getValue().visits = 0;
+//@		}
+//@		
+//@		for(Entry<String, Node> entry : nodeSet.entrySet()) {
+//@			if(entry.getValue().visits == 0)
+//@				dfs_visit(entry.getKey());
+//@		}
+		//#endif
 	}
 	
 	void dfs_visit(String label) {
@@ -146,66 +162,69 @@ public class Graph {
 	}
 	
 	public Graph mst() {
-		if(directed) throw new IllegalArgumentException("MST not applicable to directed graph.");
-		if(!weighted) throw new IllegalArgumentException("MST not applicable to unweighted graph.");
-		
-		//Set all nodes to "not visited"
-		for(Entry<String, Node> entry : nodeSet.entrySet()) {
-			entry.getValue().visits = 0;
-		}
-		
-		Graph g = new Graph(getConfigFlags()); // output graph
-		
-		Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[0]).getValue();
-		
-		g.addNode(n.label);
-		n.visits++;
-		
-		// edges available from current mst, sorted by weight
-		TreeMap<Integer, Edge> edges = new TreeMap<Integer, Edge>();
-		
-		//add outgoing edged from current node to available edges
-		for(Edge e : n.edgeList) {
-			edges.put(e.weight, e);
-		}
-		
-		while(true) {
-			Node m = null;
-			Edge f = null;
-			
-			List<Entry<Integer,Edge>> obsolete = new ArrayList<Entry<Integer,Edge>>();
-			
-			//pick edge with lowest weight
-			for(Entry<Integer, Edge> entry : edges.entrySet()) {
-				Edge e = entry.getValue();
-				if(e.dest.visits == 0) {
-					m = e.dest;
-					f = e;
-					break;
-				}
-				else {
-					obsolete.add(entry);
-				}
-			}
-			
-			if(m == null) break; //no available, unvisited nodes left
-			
-			//remove edges pointing to visited nodes
-			for(Entry<Integer,Edge> e : obsolete)
-				edges.remove(e.getKey(), e.getValue());
-
-			//add outgoing edged from current node to available edges
-			for(Edge e : m.edgeList) {
-				edges.put(e.weight, e);
-			}
-			
-			//add node and edge to output graph
-			g.addNode(m.label);
-			g.addEdge(f.src.label, f.dest.label, f.weight);
-			m.visits++;
-			
-		}
-		return g;
+		//#if !MST 
+		throw new IllegalArgumentException("MST feature is not enabled");
+		//#else
+//@	
+//@		
+//@		//Set all nodes to "not visited"
+//@		for(Entry<String, Node> entry : nodeSet.entrySet()) {
+//@			entry.getValue().visits = 0;
+//@		}
+//@		
+//@		Graph g = new Graph(getConfigFlags()); // output graph
+//@		
+//@		Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[0]).getValue();
+//@		
+//@		g.addNode(n.label);
+//@		n.visits++;
+//@		
+//@		// edges available from current mst, sorted by weight
+//@		TreeMap<Integer, Edge> edges = new TreeMap<Integer, Edge>();
+//@		
+//@		//add outgoing edged from current node to available edges
+//@		for(Edge e : n.edgeList) {
+//@			edges.put(e.weight, e);
+//@		}
+//@		
+//@		while(true) {
+//@			Node m = null;
+//@			Edge f = null;
+//@			
+//@			List<Entry<Integer,Edge>> obsolete = new ArrayList<Entry<Integer,Edge>>();
+//@			
+//@			//pick edge with lowest weight
+//@			for(Entry<Integer, Edge> entry : edges.entrySet()) {
+//@				Edge e = entry.getValue();
+//@				if(e.dest.visits == 0) {
+//@					m = e.dest;
+//@					f = e;
+//@					break;
+//@				}
+//@				else {
+//@					obsolete.add(entry);
+//@				}
+//@			}
+//@			
+//@			if(m == null) break; //no available, unvisited nodes left
+//@			
+//@			//remove edges pointing to visited nodes
+//@			for(Entry<Integer,Edge> e : obsolete)
+//@				edges.remove(e.getKey(), e.getValue());
+//@
+//@			//add outgoing edged from current node to available edges
+//@			for(Edge e : m.edgeList) {
+//@				edges.put(e.weight, e);
+//@			}
+//@			
+//@			//add node and edge to output graph
+//@			g.addNode(m.label);
+//@			g.addEdge(f.src.label, f.dest.label, f.weight);
+//@			m.visits++;
+//@			
+//@		}
+//@		return g;
+		//#endif
 	}
 	
 	public boolean[][] getAdjMatrix(){

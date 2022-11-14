@@ -6,11 +6,8 @@ import main.Graph.Node;
 public class Main {
 	
 	public static void main(String[] args) {		
-		//#if Labeled
-		System.out.println("Labled test");
-		//#endif
 		// Testing
-		Graph g = new Graph(Graph.WEIGHTED | Graph.LABELED);
+		Graph g = new Graph();
 		g.addNode("N1");
 		g.addNode("N2");
 		g.addNode("N3");

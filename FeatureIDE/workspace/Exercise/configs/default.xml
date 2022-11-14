@@ -3,7 +3,7 @@
 	<feature automatic="selected" name="Exercise"/>
 	<feature automatic="selected" name="Graph"/>
 	<feature automatic="selected" name="Node"/>
-	<feature manual="selected" name="Labeled"/>
+	<feature name="Labeled"/>
 	<feature name="Colored"/>
 	<feature automatic="selected" name="Edge"/>
 	<feature name="Weighted"/>
