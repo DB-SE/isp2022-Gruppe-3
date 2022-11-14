@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="Exercise"/>
+	<feature name="Graph"/>
+	<feature name="Node"/>
+	<feature name="Labled"/>
+	<feature name="Colored"/>
+	<feature name="Edge"/>
+	<feature name="Weighted"/>
+	<feature name="Directed"/>
+	<feature name="MST"/>
+	<feature name="DFS"/>
+</configuration>
