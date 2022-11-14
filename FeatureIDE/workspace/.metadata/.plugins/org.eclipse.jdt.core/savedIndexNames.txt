@@ -1,3 +1,0 @@
-INDEX VERSION 1.131+C:\Users\W_und\eclipse-workspace\ISP_Uebungen\FeatureIDE\workspace\.metadata\.plugins\org.eclipse.jdt.core
-1088540399.index
-117774581.index
