@@ -1,12 +1,20 @@
 package main;
 
+//#if Colored
 import java.awt.Color;
+//#endif
 import java.util.ArrayList;
 import java.util.HashMap;
+//#if MST
 import java.util.List;
+//#endif
 import java.util.Map.Entry;
+//#if Labeled
 import java.util.NoSuchElementException;
+//#endif
+//#if MST
 import java.util.TreeMap;
+//#endif
 
 public class Graph {
 	
@@ -50,14 +58,14 @@ public class Graph {
 		//#endif
 		
 		//#if Colored
-//@		Color color;
-//@		public void setColor(Color color) {
-//@			this.color = color;
-//@		}
-//@		
-//@		public Color getColor() {
-//@			return color;
-//@		}
+		Color color;
+		public void setColor(Color color) {
+			this.color = color;
+		}
+		
+		public Color getColor() {
+			return color;
+		}
 		//#endif
 		
 	}
@@ -158,77 +166,77 @@ public class Graph {
 	//#endif
 	
 	//#if MST
-//@	public Graph mst() { 
-//@		
-//@		//Set all nodes to "not visited"
-//@		for(Entry<String, Node> entry : nodeSet.entrySet()) {
-//@			entry.getValue().visits = 0;
-//@		}
-//@		
-//@		Graph g = new Graph(); // output graph
-//@		
-//@		Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[0]).getValue();
-//@		
+	public Graph mst() { 
+		
+		//Set all nodes to "not visited"
+		for(Entry<String, Node> entry : nodeSet.entrySet()) {
+			entry.getValue().visits = 0;
+		}
+		
+		Graph g = new Graph(); // output graph
+		
+		Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[0]).getValue();
+		
 		//#if Labeled
-//@		g.addNode(n.label);
+		g.addNode(n.label);
 		//#else
 //@		Node n_ = new Node();
 //@		g.addNode(n_);
 		//#endif
-//@		n.visits++;
-//@		
-//@		// edges available from current mst, sorted by weight
-//@		TreeMap<Integer, Edge> edges = new TreeMap<Integer, Edge>();
-//@		
-//@		//add outgoing edged from current node to available edges
-//@		for(Edge e : n.edgeList) {
-//@			edges.put(e.weight, e);
-//@		}
-//@		
-//@		while(true) {
-//@			Node m = null;
-//@			Edge f = null;
-//@			
-//@			List<Entry<Integer,Edge>> obsolete = new ArrayList<Entry<Integer,Edge>>();
-//@			
-//@			//pick edge with lowest weight
-//@			for(Entry<Integer, Edge> entry : edges.entrySet()) {
-//@				Edge e = entry.getValue();
-//@				if(e.dest.visits == 0) {
-//@					m = e.dest;
-//@					f = e;
-//@					break;
-//@				}
-//@				else {
-//@					obsolete.add(entry);
-//@				}
-//@			}
-//@			
-//@			if(m == null) break; //no available, unvisited nodes left
-//@			
-//@			//remove edges pointing to visited nodes
-//@			for(Entry<Integer,Edge> e : obsolete)
-//@				edges.remove(e.getKey(), e.getValue());
-//@
-//@			//add outgoing edged from current node to available edges
-//@			for(Edge e : m.edgeList) {
-//@				edges.put(e.weight, e);
-//@			}
-//@			
-//@			//add node and edge to output graph
+		n.visits++;
+		
+		// edges available from current mst, sorted by weight
+		TreeMap<Integer, Edge> edges = new TreeMap<Integer, Edge>();
+		
+		//add outgoing edged from current node to available edges
+		for(Edge e : n.edgeList) {
+			edges.put(e.weight, e);
+		}
+		
+		while(true) {
+			Node m = null;
+			Edge f = null;
+			
+			List<Entry<Integer,Edge>> obsolete = new ArrayList<Entry<Integer,Edge>>();
+			
+			//pick edge with lowest weight
+			for(Entry<Integer, Edge> entry : edges.entrySet()) {
+				Edge e = entry.getValue();
+				if(e.dest.visits == 0) {
+					m = e.dest;
+					f = e;
+					break;
+				}
+				else {
+					obsolete.add(entry);
+				}
+			}
+			
+			if(m == null) break; //no available, unvisited nodes left
+			
+			//remove edges pointing to visited nodes
+			for(Entry<Integer,Edge> e : obsolete)
+				edges.remove(e.getKey(), e.getValue());
+
+			//add outgoing edged from current node to available edges
+			for(Edge e : m.edgeList) {
+				edges.put(e.weight, e);
+			}
+			
+			//add node and edge to output graph
 			//#if Labeled
-//@			g.addNode(m.label);
-//@			g.addEdge(f.src.label, f.dest.label, f.weight);
+			g.addNode(m.label);
+			g.addEdge(f.src.label, f.dest.label, f.weight);
 			//#else
 //@			Node m_ = new Node();
 //@			g.addNode(m_);
 //@			g.addEdge(n_, m_, f.weight);
 			//#endif
-//@			m.visits++;
-//@			
-//@		}
-//@		return g;
-//@	}
+			m.visits++;
+			
+		}
+		return g;
+	}
 	//#endif
 	
 	public boolean[][] getAdjMatrix(){

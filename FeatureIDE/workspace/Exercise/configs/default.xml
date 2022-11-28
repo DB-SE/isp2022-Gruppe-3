@@ -4,10 +4,10 @@
 	<feature automatic="selected" name="Graph"/>
 	<feature automatic="selected" name="Node"/>
 	<feature manual="selected" name="Labeled"/>
-	<feature name="Colored"/>
+	<feature manual="selected" name="Colored"/>
 	<feature automatic="selected" name="Edge"/>
-	<feature manual="selected" name="Weighted"/>
-	<feature manual="selected" name="Directed"/>
-	<feature automatic="unselected" name="MST"/>
+	<feature automatic="selected" name="Weighted"/>
+	<feature automatic="unselected" name="Directed"/>
+	<feature manual="selected" name="MST"/>
 	<feature manual="selected" name="DFS"/>
 </configuration>
