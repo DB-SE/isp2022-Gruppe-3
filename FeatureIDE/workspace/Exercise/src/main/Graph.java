@@ -121,7 +121,7 @@ public class Graph {
 	//#if Weighted
 	public void addEdge(Node node1, Node node2, int weight) {
 		node1.addEdge(new Edge(node1, node2, weight));
-		//#if !directed
+		//#if !Directed
 			node2.addEdge(new Edge(node2, node1, weight));
 		//#endif
 	}
@@ -129,7 +129,7 @@ public class Graph {
 	//#if !Weighted
 //@	public void addEdge(Node node1, Node node2) {
 //@		node1.addEdge(new Edge(node1, node2));
-		//#if !directed
+		//#if !Directed
 //@			node2.addEdge(new Edge(node2, node1));
 		//#endif
 //@	}
