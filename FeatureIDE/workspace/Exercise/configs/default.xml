@@ -6,8 +6,8 @@
 	<feature manual="selected" name="Labeled"/>
 	<feature name="Colored"/>
 	<feature automatic="selected" name="Edge"/>
-	<feature automatic="selected" name="Weighted"/>
-	<feature automatic="unselected" name="Directed"/>
-	<feature manual="selected" name="MST"/>
+	<feature manual="selected" name="Weighted"/>
+	<feature manual="selected" name="Directed"/>
+	<feature automatic="unselected" name="MST"/>
 	<feature manual="selected" name="DFS"/>
 </configuration>

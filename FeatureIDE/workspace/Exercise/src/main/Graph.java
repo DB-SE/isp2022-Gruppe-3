@@ -10,13 +10,15 @@ import java.util.TreeMap;
 
 public class Graph {
 	
-	public static byte WEIGHTED = 0b0001;
-	public static byte DIRECTED = 0b0010;
-	public static byte LABELED =  0b0100;
-	public static byte COLORED =  0b1000;
-	
 	public static class Edge {
 		Node src, dest;
+		
+		public Edge(Node src_node, Node dest_node) {
+			src = src_node;
+			dest = dest_node;
+		}
+		
+		//#if Weighted
 		int weight = 1;
 
 		public Edge(Node src_node, Node dest_node, int w) {
@@ -24,86 +26,47 @@ public class Graph {
 			dest = dest_node;
 			weight = w;
 		}
-		
-		public Edge(Node src_node, Node dest_node) {
-			src = src_node;
-			dest = dest_node;
-		}
+		//#endif
 	}
 
 	public static class Node {
-		String label;
-		Color color;
-		int visits = 0;
+		String label = "";
 		ArrayList<Edge> edgeList = new ArrayList<Edge>();
 
+		public Node() {
+		}
+		
+		//#if Labeled
 		public Node(String s) {
 			label = s;
 		}
+		//#endif
 
 		public void addEdge(Edge e) {
 			edgeList.add(e);
 		}
+		//#if DFS || MST
+		int visits = 0;
+		//#endif
 		
-		public void setColor(Color color) {
-			//#if !Colored
-			throw new IllegalArgumentException("Colored Node feature is not enebled");
-			//#else
+		//#if Colored
+//@		Color color;
+//@		public void setColor(Color color) {
 //@			this.color = color;
-			//#endif
-		}
-		
-		public Color getColor() {
-			//#if !Colored
-			throw new IllegalArgumentException("Colored Node feature is not enebled");
-			//#else
+//@		}
+//@		
+//@		public Color getColor() {
 //@			return color;
-			//#endif
-		}
+//@		}
+		//#endif
 		
 	}
 
-	private HashMap<String,Node> nodeSet =
-			new HashMap<String, Node>();
-	private boolean weighted = false;
-	private boolean directed = false;
-	private boolean labeled  = false;
-	private boolean colored  = false;	
+	private HashMap<String,Node> nodeSet = new HashMap<String, Node>();
 	private int ind = 0;
 	
-	public Graph() {
-		int flags = 0;
-		//#if Weighted
-		weighted = true;
-		//#endif
-		//#if Directed
-//@		directed = true;
-		//#endif
-		//#if Labeled
-		labeled = true;
-		//#endif
-		//#if Colored
-//@		colored = true;
-		//#endif
-	}
+	public Graph() {}
 	
-	public int getConfigFlags() {
-		int out = 0;
-		if(weighted) out |= WEIGHTED;
-		if(directed) out |= DIRECTED;
-		if(labeled) out |= LABELED;
-		if(colored) out |= COLORED;
-		return out;
-	}
-	
-	public Node addNode(String label) throws IllegalArgumentException {
-		if (nodeSet.containsKey(label))
-			throw new IllegalArgumentException("The Node already exists in this graph");
-		Node n = new Node(label);
-		nodeSet.put(label,n);
-		ind++;
-		return n;
-	}
 	public Node addNode(Node node) throws IllegalArgumentException {
 		if (nodeSet.containsValue(node))throw new IllegalArgumentException("The Node already exists in this graph");
 		nodeSet.put(ind + "",node);
@@ -112,49 +75,64 @@ public class Graph {
 		return node;
 	}
 	
+	//#if Labeled
+	public Node addNode(String label) throws IllegalArgumentException {
+		if (nodeSet.containsKey(label))
+			throw new IllegalArgumentException("The Node already exists in this graph");
+		Node n = new Node(label);
+		nodeSet.put(label,n);
+		ind++;
+		return n;
+	}
+
 	public Node getNode(String label)
 		throws NoSuchElementException {
-		if(!labeled) throw new IllegalArgumentException("Trying to find a Node by label in an unlabeled graph.");
 		Node n = nodeSet.get(label);
 		if (n == null)
 			throw new NoSuchElementException();
 		return n;
 	}
 	
+		//#if Weighted
+	
 	public void addEdge(String label1, String label2, int weight) {
-		if(!labeled) throw new IllegalArgumentException("Trying to apply label in an unlabeled graph.");
 		Node node1 = getNode(label1);
 		Node node2 = getNode(label2);
 		addEdge(node1, node2, weight);
 	}
-	
-	public void addEdge(String label1, String label2) {
-		if(!labeled) throw new IllegalArgumentException("Trying to apply label in an unlabeled graph.");
-		Node node1 = getNode(label1);
-		Node node2 = getNode(label2);
-		addEdge(node1, node2);
-	}
+		//#endif
+		//#if !Weighted	
+//@	public void addEdge(String label1, String label2) {
+//@		Node node1 = getNode(label1);
+//@		Node node2 = getNode(label2);
+//@		addEdge(node1, node2);
+//@	}
+		//#endif
+	//#endif
 
+	//#if Weighted
 	public void addEdge(Node node1, Node node2, int weight) {
-		if(!weighted) weight = 1;
 		node1.addEdge(new Edge(node1, node2, weight));
-		if(!directed)node2.addEdge(new Edge(node2, node1, weight));
+		//#if !directed
+			node2.addEdge(new Edge(node2, node1, weight));
+		//#endif
 	}
-	
-	public void addEdge(Node node1, Node node2) {
-		node1.addEdge(new Edge(node1, node2));
-		if(!directed)node2.addEdge(new Edge(node2, node1));
-	}
+	//#endif
+	//#if !Weighted
+//@	public void addEdge(Node node1, Node node2) {
+//@		node1.addEdge(new Edge(node1, node2));
+		//#if !directed
+//@			node2.addEdge(new Edge(node2, node1));
+		//#endif
+//@	}
+	//#endif
 	
 	public int size() {
 		return nodeSet.size();
 	}
 
-	
+	//#if DFS 
 	public void dfs() {
-		//#if !DFS 
-//@				throw new IllegalArgumentException("DFS feature is not enabled");
-		//#else
 		
 		//Set all nodes to "not visited"
 		for(Entry<String, Node> entry : nodeSet.entrySet()) {
@@ -165,7 +143,6 @@ public class Graph {
 			if(entry.getValue().visits == 0)
 				dfs_visit(entry.getKey());
 		}
-		//#endif
 	}
 	
 	void dfs_visit(String label) {
@@ -178,72 +155,81 @@ public class Graph {
 		}
 		n.visits++;
 	}
+	//#endif
 	
-	public Graph mst() {
-		//#if !MST 
-//@		throw new IllegalArgumentException("MST feature is not enabled");
+	//#if MST
+//@	public Graph mst() { 
+//@		
+//@		//Set all nodes to "not visited"
+//@		for(Entry<String, Node> entry : nodeSet.entrySet()) {
+//@			entry.getValue().visits = 0;
+//@		}
+//@		
+//@		Graph g = new Graph(); // output graph
+//@		
+//@		Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[0]).getValue();
+//@		
+		//#if Labeled
+//@		g.addNode(n.label);
 		//#else
-	
-		
-		//Set all nodes to "not visited"
-		for(Entry<String, Node> entry : nodeSet.entrySet()) {
-			entry.getValue().visits = 0;
-		}
-		
-		Graph g = new Graph(); // output graph
-		
-		Node n = ((Entry<String, Node>)nodeSet.entrySet().toArray()[0]).getValue();
-		
-		g.addNode(n.label);
-		n.visits++;
-		
-		// edges available from current mst, sorted by weight
-		TreeMap<Integer, Edge> edges = new TreeMap<Integer, Edge>();
-		
-		//add outgoing edged from current node to available edges
-		for(Edge e : n.edgeList) {
-			edges.put(e.weight, e);
-		}
-		
-		while(true) {
-			Node m = null;
-			Edge f = null;
-			
-			List<Entry<Integer,Edge>> obsolete = new ArrayList<Entry<Integer,Edge>>();
-			
-			//pick edge with lowest weight
-			for(Entry<Integer, Edge> entry : edges.entrySet()) {
-				Edge e = entry.getValue();
-				if(e.dest.visits == 0) {
-					m = e.dest;
-					f = e;
-					break;
-				}
-				else {
-					obsolete.add(entry);
-				}
-			}
-			
-			if(m == null) break; //no available, unvisited nodes left
-			
-			//remove edges pointing to visited nodes
-			for(Entry<Integer,Edge> e : obsolete)
-				edges.remove(e.getKey(), e.getValue());
-
-			//add outgoing edged from current node to available edges
-			for(Edge e : m.edgeList) {
-				edges.put(e.weight, e);
-			}
-			
-			//add node and edge to output graph
-			g.addNode(m.label);
-			g.addEdge(f.src.label, f.dest.label, f.weight);
-			m.visits++;
-			
-		}
-		return g;
+//@		Node n_ = new Node();
+//@		g.addNode(n_);
 		//#endif
-	}
+//@		n.visits++;
+//@		
+//@		// edges available from current mst, sorted by weight
+//@		TreeMap<Integer, Edge> edges = new TreeMap<Integer, Edge>();
+//@		
+//@		//add outgoing edged from current node to available edges
+//@		for(Edge e : n.edgeList) {
+//@			edges.put(e.weight, e);
+//@		}
+//@		
+//@		while(true) {
+//@			Node m = null;
+//@			Edge f = null;
+//@			
+//@			List<Entry<Integer,Edge>> obsolete = new ArrayList<Entry<Integer,Edge>>();
+//@			
+//@			//pick edge with lowest weight
+//@			for(Entry<Integer, Edge> entry : edges.entrySet()) {
+//@				Edge e = entry.getValue();
+//@				if(e.dest.visits == 0) {
+//@					m = e.dest;
+//@					f = e;
+//@					break;
+//@				}
+//@				else {
+//@					obsolete.add(entry);
+//@				}
+//@			}
+//@			
+//@			if(m == null) break; //no available, unvisited nodes left
+//@			
+//@			//remove edges pointing to visited nodes
+//@			for(Entry<Integer,Edge> e : obsolete)
+//@				edges.remove(e.getKey(), e.getValue());
+//@
+//@			//add outgoing edged from current node to available edges
+//@			for(Edge e : m.edgeList) {
+//@				edges.put(e.weight, e);
+//@			}
+//@			
+//@			//add node and edge to output graph
+			//#if Labeled
+//@			g.addNode(m.label);
+//@			g.addEdge(f.src.label, f.dest.label, f.weight);
+			//#else
+//@			Node m_ = new Node();
+//@			g.addNode(m_);
+//@			g.addEdge(n_, m_, f.weight);
+			//#endif
+//@			m.visits++;
+//@			
+//@		}
+//@		return g;
+//@	}
+	//#endif
 	
 	public boolean[][] getAdjMatrix(){
 		boolean[][] out = new boolean[size()][size()];
