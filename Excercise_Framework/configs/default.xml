@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
-	<feature automatic="selected" name="Exercise"/>
+	<feature automatic="selected" name="Excercise"/>
 	<feature automatic="selected" name="Graph"/>
 	<feature automatic="selected" name="Node"/>
-	<feature manual="selected" name="Labeled"/>
 	<feature manual="selected" name="Colored"/>
+	<feature manual="selected" name="Labeled"/>
 	<feature automatic="selected" name="Edge"/>
-	<feature automatic="selected" name="Weighted"/>
-	<feature automatic="unselected" name="Directed"/>
+	<feature automatic="selected" manual="selected" name="Weighted"/>
+	<feature automatic="selected" name="Undirected"/>
 	<feature manual="selected" name="MST"/>
 	<feature manual="selected" name="DFS"/>
+	<feature manual="selected" name="BFS"/>
 </configuration>

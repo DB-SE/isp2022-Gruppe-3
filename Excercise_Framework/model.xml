@@ -11,19 +11,19 @@
 		<graphics key="layoutalgorithm" value="1"/>
 	</properties>
 	<struct>
-		<and abstract="true" mandatory="true" name="Exercise">
+		<and abstract="true" mandatory="true" name="Excercise">
 			<and mandatory="true" name="Graph">
-				<graphics key="collapsed" value="false"/>
 				<and mandatory="true" name="Node">
-					<feature name="Labeled"/>
 					<feature name="Colored"/>
+					<feature name="Labeled"/>
 				</and>
 				<and mandatory="true" name="Edge">
 					<feature name="Weighted"/>
-					<feature name="Directed"/>
+					<feature name="Undirected"/>
 				</and>
 				<feature name="MST"/>
 				<feature name="DFS"/>
+				<feature name="BFS"/>
 			</and>
 		</and>
 	</struct>
@@ -32,9 +32,7 @@
 			<imp>
 				<var>MST</var>
 				<conj>
-					<not>
-						<var>Directed</var>
-					</not>
+					<var>Undirected</var>
 					<var>Weighted</var>
 				</conj>
 			</imp>
