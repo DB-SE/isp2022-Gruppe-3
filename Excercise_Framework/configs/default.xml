@@ -6,9 +6,9 @@
 	<feature manual="selected" name="Colored"/>
 	<feature manual="selected" name="Labeled"/>
 	<feature automatic="selected" name="Edge"/>
-	<feature automatic="selected" manual="selected" name="Weighted"/>
-	<feature automatic="selected" name="Undirected"/>
-	<feature manual="selected" name="MST"/>
+	<feature manual="selected" name="Weighted"/>
+	<feature name="Undirected"/>
+	<feature name="MST"/>
 	<feature manual="selected" name="DFS"/>
 	<feature manual="selected" name="BFS"/>
 </configuration>

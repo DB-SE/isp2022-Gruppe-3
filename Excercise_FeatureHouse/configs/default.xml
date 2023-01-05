@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="Excercise_FeatureHouse"/>
+	<feature automatic="selected" name="Graph"/>
+	<feature automatic="selected" name="Node"/>
+	<feature manual="selected" name="Colored"/>
+	<feature manual="selected" name="Labeled"/>
+	<feature automatic="selected" manual="selected" name="Edge"/>
+	<feature automatic="selected" manual="selected" name="Weighted"/>
+	<feature automatic="selected" manual="selected" name="Undirected"/>
+	<feature manual="selected" name="MST"/>
+	<feature automatic="selected" name="Search"/>
+	<feature manual="selected" name="DFS"/>
+	<feature automatic="unselected" name="BFS"/>
+</configuration>

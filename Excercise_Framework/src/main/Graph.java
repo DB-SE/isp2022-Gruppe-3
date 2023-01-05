@@ -73,9 +73,9 @@ public class Graph {
 		}
 		
 		return node;
-	} 	
+	}
 	
-	public Color getColor(Node n) {
+	public Color getColor(Node n) { 
 		for(Property p : properties) {
 			Color c = p.getColor(n);
 			if(c != null)
@@ -84,7 +84,7 @@ public class Graph {
 		return null;
 	}
 	
-	public String getLabel(Node n) {
+	public String getLabel(Node n) {	
 		for(Property p : properties) {
 			String l = p.getLabel(n);
 			if(l != null)
@@ -100,12 +100,12 @@ public class Graph {
 		for(Property p : properties) {
 			p.add(e, weight);
 		}
-	}	
+	}
 	
 	public int size() {
 		return nodeSet.size();
 	}
-
+	
 	public boolean find(Node n) {
 		for(Search s : searches) {
 			boolean result = s.find(nodeSet, properties, n);

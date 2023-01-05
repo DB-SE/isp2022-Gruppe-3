@@ -8,9 +8,7 @@
 	<classpathentry kind="lib" path="lib/Edge.jar"/>
 	<classpathentry kind="lib" path="lib/Graph.jar"/>
 	<classpathentry kind="lib" path="lib/Labeled.jar"/>
-	<classpathentry kind="lib" path="lib/MST.jar"/>
 	<classpathentry kind="lib" path="lib/Node.jar"/>
-	<classpathentry kind="lib" path="lib/Undirected.jar"/>
 	<classpathentry kind="lib" path="lib/Weighted.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
